@@ -1,14 +1,14 @@
 import streamlit as st
 import google.generativeai as genai
 
-# Page Config
+# 1. Page Config
 st.set_page_config(page_title="X Planet Science", layout="wide")
 
-# AI Configuration
+# 2. AI Configuration
+# API Key ကို စာကြောင်းတစ်ကြောင်းတည်းဖြစ်အောင် ထည့်ထားသည်
 genai.configure(api_key="AIzaSyCIdLE7izxix3nk3KKSgLeROI7n8boHltc")
-model = genai.GenerativeModel('gemini-1.5-flash')
 
-# User Interface
+# 3. User Interface
 st.title("🪐 X Planet Science")
 st.subheader("Future of Science Learning by Neon")
 
@@ -18,7 +18,9 @@ if st.button("Explain"):
     if query:
         with st.spinner("AI က အဖြေရှာပေးနေပါတယ်..."):
             try:
-                res = model.generate_content(f"Explain clearly in Burmese: {query}")
+                # Model နာမည်ကို gemini-pro ဟု ပြောင်းလဲအသုံးပြုသည်
+                model = genai.GenerativeModel('gemini-pro')
+                res = model.generate_content(f"Explain this science topic clearly in Burmese for students: {query}")
                 st.markdown(res.text)
                 
                 # Visual Support
@@ -29,8 +31,15 @@ if st.button("Explain"):
                 elif "cell" in low_q or "ဆဲလ်" in low_q:
                     st.info("💡 ဆဲလ်တည်ဆောက်ပုံ")
                     [attachment_1](attachment)
+            
             except Exception as e:
-                st.error(f"Error: {e}")
+                # Error ထပ်တက်လျှင် တခြား Model တစ်ခုဖြင့် ထပ်စမ်းရန်
+                try:
+                    model = genai.GenerativeModel('gemini-1.5-flash-latest')
+                    res = model.generate_content(f"Explain in Burmese: {query}")
+                    st.markdown(res.text)
+                except Exception as e2:
+                    st.error(f"ချိတ်ဆက်မှု အဆင်မပြေပါ- {e2}")
     else:
         st.warning("မေးခွန်းတစ်ခုခု အရင်ရိုက်ထည့်ပေးပါဗျာ။")
         
