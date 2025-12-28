@@ -1,13 +1,14 @@
 import streamlit as st
 import google.generativeai as genai
 
-# Page Config
+# 1. Page Setup
 st.set_page_config(page_title="X Planet Science", layout="wide")
 
-# API Configuration - Key ကို စာကြောင်းတစ်ကြောင်းတည်းဖြစ်အောင် သေချာထည့်ပါ
+# 2. AI Configuration
 genai.configure(api_key="AIzaSyCIdLE7izxix3nk3KKSgLeROI7n8boHltc")
+model = genai.GenerativeModel('gemini-1.5-flash')
 
-# UI Design
+# 3. User Interface
 st.title("🪐 X Planet Science")
 st.subheader("Future of Science Learning by Neon")
 
@@ -17,25 +18,27 @@ if st.button("Explain"):
     if query:
         with st.spinner("AI က အဖြေရှာပေးနေပါတယ်..."):
             try:
-                # Model ကို 'gemini-pro' လို့ ပြောင်းသုံးကြည့်ပါမယ် (ပိုငြိမ်လို့ပါ)
-                model = genai.GenerativeModel('gemini-pro')
-                res = model.generate_content(f"Explain clearly in Burmese: {query}")
+                prompt = f"Explain this science topic clearly in Burmese for students: {query}"
+                res = model.generate_content(prompt)
                 st.markdown(res.text)
                 
-                # Visuals
-                if "solar system" in query.lower() or "စကြာဝဠာ" in query:
+                # Visual Support Section (Indentation မှန်အောင် ပြင်ပေးထားသည်)
+                low_q = query.lower()
+                if "solar system" in low_q or "စကြာဝဠာ" in low_q:
+                    st.info("💡 နေအဖွဲ့အစည်း")
+                    st.write("နေနှင့် ဂြိုဟ်များ၏ တည်နေရာပြပုံရိပ်")
                     [attachment_0](attachment)
-                elif "heart" in query.lower() or "နှလုံး" in query:
+                elif "cell" in low_q or "ဆဲလ်" in low_q:
+                    st.info("💡 ဆဲလ်တည်ဆောက်ပုံ")
+                    st.write("ဆဲလ်အတွင်းရှိ အစိတ်အပိုင်းများ")
+                    [attachment_1](attachment)
+                elif "heart" in low_q or "နှလုံး" in low_q:
+                    st.info("💡 နှလုံးတည်ဆောက်ပုံ")
+                    st.write("နှလုံး၏ အခန်းများနှင့် သွေးကြောများ")
                     
-                    
+            
             except Exception as e:
-                # Error ထပ်တက်ရင် Model နာမည် ထပ်ပြောင်းဖို့ ကြိုးစားပါမယ်
-                try:
-                    model = genai.GenerativeModel('gemini-1.5-flash')
-                    res = model.generate_content(f"Explain clearly in Burmese: {query}")
-                    st.markdown(res.text)
-                except Exception as e2:
-                    st.error(f"ချိတ်ဆက်မှု အဆင်မပြေပါ- {e2}")
+                st.error(f"AI ချိတ်ဆက်မှု အဆင်မပြေပါ- {e}")
     else:
         st.warning("မေးခွန်းတစ်ခုခု အရင်ရိုက်ထည့်ပေးပါဗျာ။")
                 
