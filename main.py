@@ -1,21 +1,34 @@
 import streamlit as st
 import google.generativeai as genai
 
-# --- CONFIG ---
+# 1. Page Setup
 st.set_page_config(page_title="X Planet Science", layout="wide")
+
+# 2. AI Configuration (Key ကို အဆုံးထိ သေချာထည့်ထားသည်)
 genai.configure(api_key="AIzaSyCIdLE7izxix3nk3KKSgLeROI7n8boHltc")
 model = genai.GenerativeModel('gemini-1.5-flash')
 
-# --- UI ---
+# 3. User Interface
 st.title("🪐 X Planet Science")
-st.write("Welcome to the Future of Science Learning!")
+st.subheader("Future of Science Learning by Neon")
 
 query = st.text_input("သိပ္ပံမေးခွန်းကို မြန်မာလို မေးမြန်းပါ:")
+
 if st.button("Explain"):
     if query:
-        with st.spinner("AI thinking..."):
-            res = model.generate_content(f"Explain this in Burmese for students: {query}")
-            st.markdown(res.text)
+        with st.spinner("AI က အဖြေရှာပေးနေပါတယ်..."):
+            try:
+                prompt = f"Explain this science topic clearly in Burmese for students: {query}"
+                res = model.generate_content(prompt)
+                st.markdown(res.text)
+                
+                # Simple Logic for Visuals
+                if "cell" in query.lower():
+                    st.info("💡 ဆဲလ်အကြောင်း ပုံရိပ်လွှာ")
+                    #                 elif "heart" in query.lower():
+                    st.info("💡 နှလုံး၏ တည်ဆောက်ပုံ")
+                    #             except Exception as e:
+                st.error(f"Error: {e}")
     else:
-        st.warning("မေးခွန်းတစ်ခုခု အရင်ရိုက်ထည့်ပါဗျာ။")
+        st.warning("မေးခွန်းတစ်ခုခု အရင်ရိုက်ထည့်ပေးပါဗျာ။")
         
