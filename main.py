@@ -4,7 +4,8 @@ import google.generativeai as genai
 # 1. Page Setup
 st.set_page_config(page_title="X Planet Science", layout="wide")
 
-# 2. AI Configuration (Key ကို အဆုံးထိ သေချာထည့်ထားသည်)
+# 2. AI Configuration
+# API Key ကို စာကြောင်းတစ်ကြောင်းတည်းဖြစ်အောင် သေချာထည့်ထားပါသည်
 genai.configure(api_key="AIzaSyCIdLE7izxix3nk3KKSgLeROI7n8boHltc")
 model = genai.GenerativeModel('gemini-1.5-flash')
 
@@ -22,13 +23,20 @@ if st.button("Explain"):
                 res = model.generate_content(prompt)
                 st.markdown(res.text)
                 
-                # Simple Logic for Visuals
-                if "cell" in query.lower():
+                # Visual Support Logic
+                low_q = query.lower()
+                if "cell" in low_q:
                     st.info("💡 ဆဲလ်အကြောင်း ပုံရိပ်လွှာ")
-                    #                 elif "heart" in query.lower():
+                    [attachment_0](attachment)
+                elif "heart" in low_q:
                     st.info("💡 နှလုံး၏ တည်ဆောက်ပုံ")
-                    #             except Exception as e:
-                st.error(f"Error: {e}")
+                    
+                elif "atom" in low_q:
+                    st.info("💡 အက်တမ်၏ တည်ဆောက်ပုံ")
+                    
+            
+            except Exception as e:
+                st.error(f"AI နှင့် ချိတ်ဆက်ရာတွင် အမှားရှိနေပါသည်: {e}")
     else:
         st.warning("မေးခွန်းတစ်ခုခု အရင်ရိုက်ထည့်ပေးပါဗျာ။")
-        
+                    
